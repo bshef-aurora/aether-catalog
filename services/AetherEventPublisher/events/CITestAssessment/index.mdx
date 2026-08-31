@@ -1,0 +1,52 @@
+---
+id: CITestAssessment
+name: CI Test Assessment (generic)
+version: 0.0.1
+summary: |
+  Published for a CI test assessment that doesn't fall into one of the defined subtypes.
+owners:
+  - release-management
+schemaPath: schema.json
+---
+
+## Overview
+
+The base `detail-type` for CI test assessments. Only `created_by`, `result`, and `description` are enforced;
+everything else — including a custom field a producer decides to add — is allowed but not schema-guaranteed
+(`additionalProperties: true`).
+
+:::warning
+**Known gap: no trip fields on assessment events**
+
+Unlike every `citest.*` event above, assessment events do **not** carry the shared trip fields (`atms_id`,
+`external_trip_id`, `vo_ticket`, etc.) — `citest/assessment/base.schema.json` only extends the common envelope, not
+`citest/base.schema.json`. If you need `atms_id` (or any other trip field) on an assessment event today, it can only
+arrive as an ad hoc property with no schema guarantee it's present or correctly typed.
+:::
+
+## Schema
+
+<SchemaViewer file="schema.json" title="CI Test Assessment (generic) schema" maxHeight="500" search="true" />
+
+## Example event
+
+This is the full envelope as it would be delivered to a webhook consumer (`detail-type: citest.assessment`):
+
+```json
+{
+  "version": "0",
+  "id": "8f14e45f-ceea-467e-adde-3f4edd1a5b22",
+  "build_id": "20260828_3",
+  "source": "com.aether.app",
+  "detail-type": "citest.assessment",
+  "detail": {
+    "created_by": "jsmith",
+    "result": "REVIEW",
+    "description": "Initial pass, awaiting VRE sign-off"
+  },
+  "time": "2026-08-28T16:10:00Z",
+  "region": "us-east-1",
+  "account": "123456789012",
+  "resources": []
+}
+```

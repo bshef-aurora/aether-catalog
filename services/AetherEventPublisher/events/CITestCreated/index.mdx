@@ -1,0 +1,57 @@
+---
+id: CITestCreated
+name: CI Test Created
+version: 0.0.1
+summary: |
+  Published when a CI test trip is created, prior to being started.
+owners:
+  - release-management
+schemaPath: schema.json
+---
+
+## Overview
+
+Published when a CI test trip is created — for example, when the trip is created in ATMS — before it's ready or
+started. Requires the shared trip fields plus a `date` field (the calendar date the trip was created, `YYYY-MM-DD`).
+
+:::warning
+**Worth confirming before this goes live**
+
+`citest/base.schema.json` also requires `external_trip_id`, `order_number`, `log_id`, `vo_ticket`, and `asset` on
+every leaf event including this one. `log_id`'s format embeds a timestamp that reads like it's generated when the
+test actually runs — if that (or any of the other trip fields) isn't actually known yet at trip-creation time,
+requiring it here may be too strict. Confirm with the producer before relying on this schema as-is.
+:::
+
+## Schema
+
+<SchemaViewer file="schema.json" title="CI Test Created schema" maxHeight="500" search="true" />
+
+## Example event
+
+This is the full envelope as it would be delivered to a webhook consumer (`detail-type: citest.created`):
+
+```json
+{
+  "version": "0",
+  "id": "8f14e45f-ceea-467e-adde-3f4edd1a5b22",
+  "build_id": "20260828_3",
+  "source": "com.aether.app",
+  "detail-type": "citest.created",
+  "detail": {
+    "atms_id": "AOS3-AURY-00417",
+    "external_trip_id": "a3c9e2d1-7b44-4a1e-9c2f-1d8e6f0b5a91",
+    "order_number": "ORD-2291",
+    "log_id": "20260828.141205Z.asvat-02017.a3c9e2d1-7b44-4a1e-9c2f-1d8e6f0b5a91_DEV",
+    "vo_ticket": "VO-882",
+    "asset": "asvat-02017",
+    "platform": "fusion",
+    "shift": "PM",
+    "date": "2026-08-28"
+  },
+  "time": "2026-08-28T14:00:00Z",
+  "region": "us-east-1",
+  "account": "123456789012",
+  "resources": []
+}
+```

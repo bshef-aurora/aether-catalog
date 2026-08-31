@@ -1,0 +1,41 @@
+---
+id: CITestAssessmentVRE
+name: CI Test Assessment — VRE
+version: 0.0.1
+summary: |
+  Published when a VRE (Vehicle Readiness Engineer) assessment is recorded.
+owners:
+  - release-management
+schemaPath: schema.json
+---
+
+## Overview
+
+Published when a VRE (Vehicle Readiness Engineer) assessment is recorded. Extends the assessment base.
+
+## Schema
+
+<SchemaViewer file="schema.json" title="CI Test Assessment — VRE schema" maxHeight="500" search="true" />
+
+## Example event
+
+This is the full envelope as it would be delivered to a webhook consumer (`detail-type: citest.assessment.vre`):
+
+```json
+{
+  "version": "0",
+  "id": "8f14e45f-ceea-467e-adde-3f4edd1a5b22",
+  "build_id": "20260828_3",
+  "source": "com.aether.app",
+  "detail-type": "citest.assessment.vre",
+  "detail": {
+    "created_by": "agarcia",
+    "result": "PASS",
+    "description": "VRE reviewed troubleshooting notes, no vehicle readiness concerns"
+  },
+  "time": "2026-08-28T16:30:00Z",
+  "region": "us-east-1",
+  "account": "123456789012",
+  "resources": []
+}
+```

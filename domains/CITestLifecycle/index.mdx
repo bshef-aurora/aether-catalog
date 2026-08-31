@@ -1,0 +1,41 @@
+---
+id: CITestLifecycle
+name: CI Test Lifecycle
+version: 0.0.1
+summary: |
+  The lifecycle of a CI test trip, from creation through assessment, as published on the AETHER EventBridge bus.
+owners:
+  - release-management
+services:
+  - id: AetherEventPublisher
+    version: 0.0.1
+---
+
+## Overview
+
+This domain covers every event published by AETHER for a single CI test trip: creation, readiness, start, optional
+troubleshooting or service hold, end, and the assessments (operator, VRE, autonomy triage, and Release Management)
+that follow.
+
+A CI test trip is identified consistently across every event in this domain by a shared set of trip fields:
+`atms_id`, `external_trip_id`, `order_number`, `log_id`, `vo_ticket`, `asset`, `platform`, and `shift`. Every event
+below except the assessment events carries these fields, so you can correlate everything that happened to one trip.
+
+<NodeGraph />
+
+## Typical trip flow
+
+1. **`citest.created`** — the trip is created (e.g. in ATMS), before it's ready or started.
+2. **`citest.readystate`** — the trip successfully achieves a ready state.
+3. **`citest.started`** — the trip starts.
+4. **`citest.ts`** *(optional)* — the trip enters troubleshooting.
+5. **`citest.servicehold`** *(optional)* — the trip is placed on a service hold.
+6. **`citest.ended`** — the trip ends.
+7. **Assessments** — `citest.assessment.operator`, `citest.assessment.vre`, `citest.assessment.triage`, and
+   `citest.assessment.rm` (and the generic `citest.assessment`) are recorded afterward. These do **not** currently
+   carry the trip fields above — see the note on the assessment events for why that's a known gap.
+
+## Status
+
+AETHER is a prototype, owned by Release Management. Schema filenames, required fields, and the assessment subtype
+list should be treated as a snapshot that will keep evolving until AETHER reaches production.

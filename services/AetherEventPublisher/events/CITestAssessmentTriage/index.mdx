@@ -1,0 +1,48 @@
+---
+id: CITestAssessmentTriage
+name: CI Test Assessment — Autonomy Triage
+version: 0.0.1
+summary: |
+  Published when an autonomy triage assessment is recorded.
+owners:
+  - release-management
+schemaPath: schema.json
+---
+
+## Overview
+
+Published when an autonomy triage assessment is recorded. Extends the assessment base.
+
+:::note
+**Known gap: subtype list incomplete**
+
+Planning docs reference five assessment subtypes (Operator, VRE, Autonomy Triage, HIL, On-Road/Diagonal) but only
+four exist in the schema today — HIL and On-Road/Diagonal don't have schemas yet.
+:::
+
+## Schema
+
+<SchemaViewer file="schema.json" title="CI Test Assessment — Autonomy Triage schema" maxHeight="500" search="true" />
+
+## Example event
+
+This is the full envelope as it would be delivered to a webhook consumer (`detail-type: citest.assessment.triage`):
+
+```json
+{
+  "version": "0",
+  "id": "8f14e45f-ceea-467e-adde-3f4edd1a5b22",
+  "build_id": "20260828_3",
+  "source": "com.aether.app",
+  "detail-type": "citest.assessment.triage",
+  "detail": {
+    "created_by": "kwong",
+    "result": "PASS",
+    "description": "Autonomy triage found no software faults related to the stall event"
+  },
+  "time": "2026-08-28T16:45:00Z",
+  "region": "us-east-1",
+  "account": "123456789012",
+  "resources": []
+}
+```

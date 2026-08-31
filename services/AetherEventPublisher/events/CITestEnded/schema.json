@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CI Test Ended Event",
+  "description": "Published when a CI test trip has ended.",
+  "type": "object",
+  "required": [
+    "source",
+    "detail-type",
+    "detail",
+    "time",
+    "build_id"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "JSON Schema version",
+      "const": "0"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique event identifier (UUID v4)",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "build_id": {
+      "type": "string",
+      "description": "Build identifier in the format YYYYMMDD_N (e.g. 20261031_55)",
+      "pattern": "^[0-9]{8}_[0-9]{1,3}$"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source of the event",
+      "const": "com.aether.app"
+    },
+    "detail-type": {
+      "type": "string",
+      "const": "citest.ended",
+      "description": "Type of event"
+    },
+    "detail": {
+      "type": "object",
+      "description": "CI test trip payload shared across all citest events",
+      "required": [
+        "atms_id",
+        "external_trip_id",
+        "order_number",
+        "log_id",
+        "vo_ticket",
+        "asset",
+        "platform",
+        "shift"
+      ],
+      "properties": {
+        "atms_id": {
+          "type": "string",
+          "description": "ATMS dispatch load ID for the trip (e.g. AOS3-AURY-00323)",
+          "pattern": "^[A-Z0-9]+-[A-Z0-9]+-[0-9]+$"
+        },
+        "external_trip_id": {
+          "type": "string",
+          "description": "External trip identifier (UUID v4)",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "order_number": {
+          "type": "string",
+          "description": "Order number associated with the trip",
+          "minLength": 1
+        },
+        "log_id": {
+          "type": "string",
+          "description": "Log identifier for the trip (e.g. 20260516.030533Z.asvat-02002.fb37e9d0-4391-4d24-b61c-b662be5eaa0b_DEV)",
+          "pattern": "^[0-9]{8}\\.[0-9]{6}Z\\.[a-z0-9-]+\\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}_[A-Z]+$"
+        },
+        "vo_ticket": {
+          "type": "string",
+          "description": "VO ticket Jira key for the trip",
+          "minLength": 1
+        },
+        "asset": {
+          "type": "string",
+          "description": "Asset identifier for the trip",
+          "minLength": 1
+        },
+        "platform": {
+          "type": "string",
+          "description": "Platform the trip runs on",
+          "enum": [
+            "fusion",
+            "perseus-aaet",
+            "perseus-vnl"
+          ]
+        },
+        "shift": {
+          "type": "string",
+          "description": "Shift identifier",
+          "enum": [
+            "AM",
+            "PM",
+            "OTHER"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the event occurred"
+    },
+    "region": {
+      "type": "string",
+      "description": "AWS region where the event originated",
+      "pattern": "^[a-z]{2}-[a-z]+-\\d$"
+    },
+    "account": {
+      "type": "string",
+      "description": "AWS account ID that published the event",
+      "pattern": "^\\d{12}$"
+    },
+    "resources": {
+      "type": "array",
+      "description": "ARNs of resources associated with this event",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

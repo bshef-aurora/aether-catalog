@@ -1,0 +1,53 @@
+---
+id: AetherEventPublisher
+name: AETHER Event Publisher
+version: 0.0.1
+summary: |
+  The producer that calls PutEvents against the AETHER EventBridge bus for every CI test trip lifecycle event.
+owners:
+  - release-management
+sends:
+  - id: CITestCreated
+    version: 0.0.1
+  - id: CITestReadyState
+    version: 0.0.1
+  - id: CITestStarted
+    version: 0.0.1
+  - id: CITestTroubleshooting
+    version: 0.0.1
+  - id: CITestServiceHold
+    version: 0.0.1
+  - id: CITestEnded
+    version: 0.0.1
+  - id: CITestAssessment
+    version: 0.0.1
+  - id: CITestAssessmentOperator
+    version: 0.0.1
+  - id: CITestAssessmentVRE
+    version: 0.0.1
+  - id: CITestAssessmentTriage
+    version: 0.0.1
+  - id: CITestAssessmentRM
+    version: 0.0.1
+---
+
+## Overview
+
+AETHER (Aurora Event & Telemetry Hub for Enterprise Routing) publishes every CI test trip lifecycle event to a
+custom EventBridge bus (`aether-bus-{environment}`). A routing rule matches on `source` + `detail-type` and
+forwards matching events to an SQS processing queue, consumed by a Lambda in batches of 10. Failures retry via the
+queue's redrive policy (5 attempts) before landing in a dead-letter queue; CloudWatch alarms watch Lambda
+errors/throttles and queue age/depth, notifying a shared SNS topic.
+
+Every event shares the same envelope: `version`, `id`, `build_id`, `source` (always `com.aether.app`), `detail-type`,
+`detail`, `time`, `region`, `account`, and `resources`. `detail` is where the event-specific payload lives, and its
+shape depends on `detail-type` — see each event below.
+
+<NodeGraph />
+
+## Status
+
+AETHER is a prototype, hosted in Google Drive rather than a merged git repository. Treat this catalog as a snapshot
+that will keep evolving until AETHER reaches production. This is a distinct system from Aurora's unrelated
+`eventlog` telemetry framework (`production/eventlog/` in `aurora-tech/av`) — the two share vocabulary but no code,
+infrastructure, or governance.
